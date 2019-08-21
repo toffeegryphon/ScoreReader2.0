@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pdflib.DocumentRecycler;
+import com.example.pdflib.SegmentBuilder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,14 +48,15 @@ public class MainActivity extends AppCompatActivity {
         final DocumentRecycler documentRecycler = new DocumentRecycler(
                 demo,
                 (RecyclerView) findViewById(R.id.documentsRecycler),
-                display,
-                (ViewGroup) findViewById(R.id.outlineContainer));
+                display);
+
+        final SegmentBuilder segmentBuilder = new SegmentBuilder(documentRecycler, (ViewGroup) findViewById(R.id.outlineContainer));
 
         Button getPositionButton = findViewById(R.id.getPositionButton);
         getPositionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("OFFSET", String.valueOf(documentRecycler.bookmarkPosition()));
+                Log.d("OFFSET", String.valueOf(segmentBuilder.bookmarkPosition()));
             }
         });
 
@@ -62,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
         scrollButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Bitmap> segments = documentRecycler.getSegments();
+                ArrayList<Bitmap> segments = segmentBuilder.getSegments();
                 Log.d("SEGMENTS", segments.toString());
-                documentRecycler.finish();
+                segmentBuilder.finish();
             }
         });
 
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         SeekBar segmentHeightSeek = findViewById(R.id.segmentHeightSeek);
 
         // Initiate SeekBar to the correct Progress
-        int progress = (int) (100 * (float) documentRecycler.getSegmentHeight() / display.y);
+        int progress = (int) (100 * (float) segmentBuilder.getSegmentHeight() / display.y);
         segmentHeightSeek.setProgress(progress, true);
 
         segmentHeightSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 int segmentHeight = (int) (display.y * seekBar.getProgress() / 100.0f);
                 Log.d("SEGMENT_HEIGHT", String.valueOf(segmentHeight));
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(display.x, segmentHeight);
-                documentRecycler.getSegmentOutline().setLayoutParams(params);
+                segmentBuilder.getSegmentOutline().setLayoutParams(params);
             }
 
             @Override
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 // Save SegmentHeight on release only to prevent constantly changing the value and causing excess memory load
                 int segmentHeight = (int) (display.y * seekBar.getProgress() / 100.0f);
-                documentRecycler.setSegmentHeight(segmentHeight);
+                segmentBuilder.setSegmentHeight(segmentHeight);
                 Log.d("STOP_TRACK", String.valueOf(segmentHeight));
             }
         });

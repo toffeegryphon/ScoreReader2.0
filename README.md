@@ -24,13 +24,32 @@ setting up bookmarks and cutting the document up into segments.
 
 #### Constructor 
 `DocumentRecycler(File document, RecyclerView recyclerView, Point
-displaySize, ViewGroup outlineContainer)`
+displaySize)`
 > `document` | PDF File
 
 > `recyclerView` | RecyclerView for the document (and subsequently
 > segments)
 
 > `displaySize` | Device width and height
+
+### DocumentAdapter
+Takes in the PdfRenderer of the PDF File and the target display size of
+the page, using the `page.xml` layout.
+
+`new DocumentAdapter(renderer, displaySize)` creates a RecyclerView
+Adapter of renderer, with each page of displaySize.x pixels wide and
+displaySize.y pixels tall. ScrollView enables the resulting bitmap to be
+larger than screen size.
+
+### SegmentBuilder
+For bookmarking, generating Bitmap Segments (Lines), adjusting Segment
+Heights
+
+#### Constructor
+`SegmentBuilder(DocumentRecycler documentRecycler, ViewGroup
+outlineContainer)`
+
+> `documentRecycler` | Source DocumentRecycler
 
 > `outlineContainer` | Parent layout for the segmentOutline to be
 > inflated into
@@ -54,21 +73,16 @@ and returns a Bitmap of the bookmarked segment. (TODO: add variable
 `segmentHeight`
 > Height of each segment in px.
 
-### DocumentAdapter
-Takes in the PdfRenderer of the PDF File and the target display size of
-the page, using the `page.xml` layout.
-
-`new DocumentAdapter(renderer, displaySize)` creates a RecyclerView
-Adapter of renderer, with each page of displaySize.x pixels wide and
-displaySize.y pixels tall. ScrollView enables the resulting bitmap to be
-larger than screen size.
-
 ## ChangeLog
 ### 21/08/2019
-- Improved `calculate()`
-- Added `SegmentAdapter`
-- Added `finish()`
-- Renamed `getPosition()` to `bookmarkPosition`
-- Added `segment_outline.xml`
-- Added Functionality: Segment outline, and SeekBar to change
-  `segmentHeight`
+1. Improved `calculate()`
+2. Added `SegmentAdapter`
+3. Added `finish()`
+4. Renamed `getPosition()` to `bookmarkPosition`
+5. Added `segment_outline.xml`
+6. Added Functionality: Segment outline, and SeekBar to change
+   `segmentHeight`
+---
+7. Abstracted portions of DocumentRecycler to SegmentBuilder, such that
+  Document Recycler deals with generating Bitmap RecyclerView from PDF
+  File only.
