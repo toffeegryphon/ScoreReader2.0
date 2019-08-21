@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">PDFUtils</string>
+    <string name="imageViewDescription">image</string>
+    <string name="getPositionButtonText">Bookmark</string>
+    <string name="scrollButtonText">scroll</string>
+    <string name="segmentViewDescription">Segment</string>
+</resources>

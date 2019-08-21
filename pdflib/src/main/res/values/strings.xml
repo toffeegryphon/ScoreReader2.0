@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PDFLib</string>
+    <string name="pageDescription">Document Page</string>
+    <string name="segmentOutlineDescription">Segment Outline</string>
+</resources>
