@@ -6,13 +6,17 @@ import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -28,20 +32,77 @@ public class SegmentBuilder {
     private LinearLayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
 
-    private FrameLayout segmentOutline;
+    private ViewGroup segmentBuilder;
 
     private int segmentHeight = 440;
 
-    public SegmentBuilder(@NonNull DocumentRecycler documentRecycler, @NonNull ViewGroup outlineContainer) {
+    // TODO allow own implementation of segment building
+    public SegmentBuilder(@NonNull DocumentRecycler documentRecycler, @NonNull ViewGroup container) {
         displaySize = documentRecycler.getDisplaySize();
         recyclerView = documentRecycler.getRecyclerView();
         layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         adapter = recyclerView.getAdapter();
 
         Context context = recyclerView.getContext();
-        segmentOutline = (FrameLayout) LayoutInflater.from(context).inflate(R.layout.segment_outline, outlineContainer, false);
+        segmentBuilder = (ViewGroup) LayoutInflater.from(context).inflate(
+                R.layout.segment_builder, container, false);
+        container.addView(segmentBuilder);
+
+        ViewGroup outlineContainer = segmentBuilder.findViewById(R.id.outlineContainer);
+        final FrameLayout segmentOutline = (FrameLayout) LayoutInflater.from(context).inflate(
+                R.layout.segment_outline,
+                outlineContainer,
+                false);
         outlineContainer.addView(segmentOutline);
         segmentOutline.getLayoutParams().height = segmentHeight;
+
+        // Bookmark Button
+        FloatingActionButton bookmarkButton = segmentBuilder.findViewById(R.id.bookmarkButton);
+        bookmarkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bookmarkPosition();
+            }
+        });
+
+        // Finish Button
+        FloatingActionButton finishButton = segmentBuilder.findViewById(R.id.finishButton);
+        finishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        // SeekBar
+        SeekBar segmentHeightSeeker = segmentBuilder.findViewById(R.id.segmentHeightSeeker);
+
+        // Initiate SeekBar to the correct Progress
+        int progress = (int) (100 * (float) segmentHeight / displaySize.y);
+        segmentHeightSeeker.setProgress(progress, true);
+
+        segmentHeightSeeker.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // Animate changes in SegmentHeight
+                int segmentHeight = (int) (displaySize.y * seekBar.getProgress() / 100.0f);
+                Log.d("SEGMENT_HEIGHT", String.valueOf(segmentHeight));
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(displaySize.x, segmentHeight);
+                segmentOutline.setLayoutParams(params);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Save SegmentHeight on release only to prevent constantly changing the value and causing excess memory load
+                segmentHeight = (int) (displaySize.y * seekBar.getProgress() / 100.0f);
+                Log.d("STOP_TRACK", String.valueOf(segmentHeight));
+            }
+        });
 
         // TODO Consider: Space vs Speed? Save bookmarks - utilises less space, but Save segments - faster.
         // TODO Change bookmarks to HashMap / Add a bookmarks, segmentHeight HashMap (if it is to be saved)
@@ -49,15 +110,14 @@ public class SegmentBuilder {
         segments = new ArrayList<>();
     }
 
-    // Get Current Offset Position
-    public int bookmarkPosition() {
+    // Add current Offset Position to Bookmarks
+    private void bookmarkPosition() {
         int position = recyclerView.computeVerticalScrollOffset();
         bookmarks.add(position); // TODO Include a Check before adding. E.g. if within 5% of another bookmark, prompt user.
         segments.add(calculate(position, ((DocumentAdapter) adapter).getPageSize().y));
         Log.d("BOOKMARKS", bookmarks.toString());
         Log.d("SEGMENTS", segments.toString());
 
-        return position;
     }
 
     private Bitmap calculate(int bookmark, int pageHeight) { // TODO segmentHeight should probably be an argument
@@ -74,27 +134,10 @@ public class SegmentBuilder {
         return Bitmap.createBitmap(original, 0, bookmark - page * pageHeight, displaySize.x, tempHeight);
     }
 
-    public void finish() {
+    private void finish() {
         SegmentAdapter segmentAdapter = new SegmentAdapter(segments);
         recyclerView.setAdapter(segmentAdapter);
-    }
-
-    public int getSegmentHeight() {
-        return segmentHeight;
-    }
-
-    public void setSegmentHeight(int height) {
-        segmentHeight = height;
-        segmentOutline.setLayoutParams(new FrameLayout.LayoutParams(displaySize.x, height));
-    }
-
-    public FrameLayout getSegmentOutline() {
-        return segmentOutline;
-    }
-
-    public ArrayList<Bitmap> getSegments() {
-        return segments;
-
+        segmentBuilder.setVisibility(View.GONE);
     }
 }
 

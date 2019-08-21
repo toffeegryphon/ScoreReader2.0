@@ -11,6 +11,11 @@ more troublesome.
 An application to flip the page automatically, every so often to keep
 the music flowing.
 
+## Users
+1. Scroll SeekBar to adjust height of each line (segment).
+2. Scroll and bookmark lines.
+3. Click done.
+
 ## Potential Development
 - Some sort of OCR to determine each bar/line
 - Get the tempo of the music and flip accordingly (based on number of
@@ -46,12 +51,11 @@ For bookmarking, generating Bitmap Segments (Lines), adjusting Segment
 Heights
 
 #### Constructor
-`SegmentBuilder(DocumentRecycler documentRecycler, ViewGroup
-outlineContainer)`
+`SegmentBuilder(DocumentRecycler documentRecycler, ViewGroup container)`
 
 > `documentRecycler` | Source DocumentRecycler
 
-> `outlineContainer` | Parent layout for the segmentOutline to be
+> `container` | Parent layout for the `segment_builder.xml` to be
 > inflated into
 
 #### Methods
@@ -86,3 +90,5 @@ and returns a Bitmap of the bookmarked segment. (TODO: add variable
 7. Abstracted portions of DocumentRecycler to SegmentBuilder, such that
   Document Recycler deals with generating Bitmap RecyclerView from PDF
   File only.
+8. Abstracted Buttons/SeekBar to SegmentBuilder. (TODO: Create API
+   endpoints for users to implement their own versions)

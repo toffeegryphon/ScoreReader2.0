@@ -50,55 +50,55 @@ public class MainActivity extends AppCompatActivity {
                 (RecyclerView) findViewById(R.id.documentsRecycler),
                 display);
 
-        final SegmentBuilder segmentBuilder = new SegmentBuilder(documentRecycler, (ViewGroup) findViewById(R.id.outlineContainer));
+        final SegmentBuilder segmentBuilder = new SegmentBuilder(documentRecycler, (ViewGroup) findViewById(R.id.builderContainer));
 
-        Button getPositionButton = findViewById(R.id.getPositionButton);
-        getPositionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("OFFSET", String.valueOf(segmentBuilder.bookmarkPosition()));
-            }
-        });
-
-        Button scrollButton = findViewById(R.id.scrollButton);
-        scrollButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<Bitmap> segments = segmentBuilder.getSegments();
-                Log.d("SEGMENTS", segments.toString());
-                segmentBuilder.finish();
-            }
-        });
-
-        // TODO Move to different class
-        SeekBar segmentHeightSeek = findViewById(R.id.segmentHeightSeek);
-
-        // Initiate SeekBar to the correct Progress
-        int progress = (int) (100 * (float) segmentBuilder.getSegmentHeight() / display.y);
-        segmentHeightSeek.setProgress(progress, true);
-
-        segmentHeightSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // Animate changes in SegmentHeight
-                int segmentHeight = (int) (display.y * seekBar.getProgress() / 100.0f);
-                Log.d("SEGMENT_HEIGHT", String.valueOf(segmentHeight));
-                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(display.x, segmentHeight);
-                segmentBuilder.getSegmentOutline().setLayoutParams(params);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // Save SegmentHeight on release only to prevent constantly changing the value and causing excess memory load
-                int segmentHeight = (int) (display.y * seekBar.getProgress() / 100.0f);
-                segmentBuilder.setSegmentHeight(segmentHeight);
-                Log.d("STOP_TRACK", String.valueOf(segmentHeight));
-            }
-        });
+//        Button getPositionButton = findViewById(R.id.getPositionButton);
+//        getPositionButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d("OFFSET", String.valueOf(segmentBuilder.bookmarkPosition()));
+//            }
+//        });
+//
+//        Button scrollButton = findViewById(R.id.scrollButton);
+//        scrollButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ArrayList<Bitmap> segments = segmentBuilder.getSegments();
+//                Log.d("SEGMENTS", segments.toString());
+//                segmentBuilder.finish();
+//            }
+//        });
+//
+//        // TODO Move to different class
+//        SeekBar segmentHeightSeek = findViewById(R.id.segmentHeightSeek);
+//
+//        // Initiate SeekBar to the correct Progress
+//        int progress = (int) (100 * (float) segmentBuilder.getSegmentHeight() / display.y);
+//        segmentHeightSeek.setProgress(progress, true);
+//
+//        segmentHeightSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                // Animate changes in SegmentHeight
+//                int segmentHeight = (int) (display.y * seekBar.getProgress() / 100.0f);
+//                Log.d("SEGMENT_HEIGHT", String.valueOf(segmentHeight));
+//                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(display.x, segmentHeight);
+//                segmentBuilder.getSegmentOutline().setLayoutParams(params);
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//                // Save SegmentHeight on release only to prevent constantly changing the value and causing excess memory load
+//                int segmentHeight = (int) (display.y * seekBar.getProgress() / 100.0f);
+//                segmentBuilder.setSegmentHeight(segmentHeight);
+//                Log.d("STOP_TRACK", String.valueOf(segmentHeight));
+//            }
+//        });
     }
 }
