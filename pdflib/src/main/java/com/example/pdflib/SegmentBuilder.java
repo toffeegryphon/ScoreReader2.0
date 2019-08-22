@@ -8,9 +8,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -135,6 +137,23 @@ public class SegmentBuilder {
     }
 
     private void finish() {
+        EditText bpmEdit = segmentBuilder.findViewById(R.id.bpmEdit);
+        EditText bpbEdit = segmentBuilder.findViewById(R.id.bpbEdit);
+        EditText bplEdit = segmentBuilder.findViewById(R.id.bplEdit);
+        String bpmString = bpmEdit.getText().toString();
+        String bpbString = bpbEdit.getText().toString();
+        String bplString = bplEdit.getText().toString();
+        if (bpmString.equals("") || bpbString.equals("") || bplString.equals("")) {
+            Toast.makeText(recyclerView.getContext(), "Enter Beats Per Minute, Beats Per Bar, and Bars Per Line", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        int bpm = Integer.parseInt(bpmString);
+        int bpb = Integer.parseInt(bpbString);
+        int bpl = Integer.parseInt(bplString);
+        int dps = (int) (60.0f / bpm * bpb * bpl);
+        Log.d("DURATION", String.valueOf(dps));
+
         SegmentAdapter segmentAdapter = new SegmentAdapter(segments);
         recyclerView.setAdapter(segmentAdapter);
         segmentBuilder.setVisibility(View.GONE);

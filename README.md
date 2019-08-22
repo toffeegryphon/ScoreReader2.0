@@ -92,3 +92,15 @@ and returns a Bitmap of the bookmarked segment. (TODO: add variable
   File only.
 8. Abstracted Buttons/SeekBar to SegmentBuilder. (TODO: Create API
    endpoints for users to implement their own versions)
+   
+#### 22/08/2019
+1. Added inputs for beats per minute (BPM), beats per bar (BPB), and
+   bars per line/segment (BPL)
+
+## To Do
+1. Decide between file saving implementations - a config file vs saving
+   the whole bitmap array.
+2. Implement chosen save method.
+3. Implement advanced bar indication.
+4. Auto scrolling.
+5. File picker

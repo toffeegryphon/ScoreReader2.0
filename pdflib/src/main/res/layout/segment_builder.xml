@@ -21,37 +21,111 @@
         android:id="@+id/toolbarContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#CC33b5e5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <SeekBar
-            android:id="@+id/segmentHeightSeeker"
+        <LinearLayout
+            android:id="@+id/selectionContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/finishButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@+id/bookmarkButton"
+            app:layout_constraintStart_toEndOf="@+id/finishButton"
+            app:layout_constraintTop_toTopOf="@+id/toolbarContainer">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/finishButton"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/bpmText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="@string/bpsText" />
+
+            <EditText
+                android:id="@+id/bpmEdit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/bpsText"
+                android:inputType="number"
+                android:autofillHints="@string/bpsText"
+                tools:targetApi="o" />
+
+            <TextView
+                android:id="@+id/bpbText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="@string/bpbText" />
+
+            <EditText
+                android:id="@+id/bpbEdit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:autofillHints="@string/bpbText"
+                android:ems="10"
+                android:hint="@string/bpbText"
+                android:inputType="number"
+                tools:targetApi="o" />
+
+            <TextView
+                android:id="@+id/bplText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="@string/bplText" />
+
+            <EditText
+                android:id="@+id/bplEdit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/bplText"
+                android:inputType="number"
+                android:autofillHints="@string/bplText"
+                tools:targetApi="o" />
+
+            <Button
+                android:id="@+id/advancedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="@string/advancedButton" />
+
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/segmentHeightSeeker"
+            android:layout_width="411dp"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/ic_done_black_24dp"
-            android:focusable="true" />
+            app:layout_constraintEnd_toEndOf="@id/toolbarContainer"
+            app:layout_constraintStart_toStartOf="@id/toolbarContainer"
+            app:layout_constraintTop_toBottomOf="@+id/selectionContainer"
+            tools:visibility="visible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/bookmarkButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:focusable="true"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_bookmark_black_24dp"
-            android:focusable="true" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_bookmark_black_24dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/finishButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/selectionContainer"
+            app:srcCompat="@drawable/ic_done_black_24dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

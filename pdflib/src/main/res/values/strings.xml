@@ -2,4 +2,8 @@
     <string name="app_name">PDFLib</string>
     <string name="pageDescription">Document Page</string>
     <string name="segmentOutlineDescription">Segment Outline</string>
+    <string name="bpsText">BPS</string>
+    <string name="bplText">BPL</string>
+    <string name="advancedButton">Advanced</string>
+    <string name="bpbText">BPB</string>
 </resources>
