@@ -60,9 +60,9 @@ Heights
 
 #### Methods
 `bookmarkPosition()` 
-> Gets the current offset position, and adds to
-bookmarks list. Calls `calculate()` and adds generated segment Bitmap to
-segments list.
+> Gets the current offset position, and adds to bookmarks list. Calls
+> `calculate()` and adds generated segment Bitmap to segments list. Then
+> jumps past the bookmark.
 
 `calculate()` 
 > Based on bookmarked position and page height, generates
@@ -96,6 +96,11 @@ and returns a Bitmap of the bookmarked segment. (TODO: add variable
 #### 22/08/2019
 1. Added inputs for beats per minute (BPM), beats per bar (BPB), and
    bars per line/segment (BPL)
+   
+#### 16/11/2019
+1. Added last blank page.
+2. Added file selector (so far only from downloads)
+3. Auto jump after bookmarking.
 
 ## To Do
 1. Decide between file saving implementations - a config file vs saving
@@ -103,4 +108,5 @@ and returns a Bitmap of the bookmarked segment. (TODO: add variable
 2. Implement chosen save method.
 3. Implement advanced bar indication.
 4. Auto scrolling.
-5. File picker
+5. File picker.
+6. Convert to single source of data (Repository)

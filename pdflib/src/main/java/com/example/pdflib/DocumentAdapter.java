@@ -35,11 +35,15 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
 
     @Override
     public void onBindViewHolder(@NonNull DocumentViewHolder holder, int position) {
-        // Render PDF as Bitmap
-        PdfRenderer.Page page = renderer.openPage(position);
         Bitmap bitmap = Bitmap.createBitmap(pageSize.x, pageSize.y, Bitmap.Config.ARGB_4444);
-        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-        page.close();
+
+        // If not last page
+        if (position != getItemCount() - 1) {
+            // Render PDF as Bitmap
+            PdfRenderer.Page page = renderer.openPage(position);
+            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+            page.close();
+        }
 
         // Set Bitmap as Source of ImageView
         holder.pageView.setImageBitmap(bitmap);
@@ -48,7 +52,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
 
     @Override
     public int getItemCount() {
-        return renderer.getPageCount();
+        return renderer.getPageCount() + 1; // Include a last blank page
     }
 
     Point getPageSize() { // Wanted to put this in the parent class. But page size may change due to rotation

@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Objects;
 
 public class SegmentBuilder {
@@ -28,6 +29,7 @@ public class SegmentBuilder {
     private Point displaySize;
 
     private ArrayList<Integer> bookmarks;
+    private LinkedHashMap<Integer, Integer> bookmarksMap;
     private ArrayList<Bitmap> segments;
 
     private RecyclerView recyclerView;
@@ -39,7 +41,8 @@ public class SegmentBuilder {
     private int segmentHeight = 440;
 
     // TODO allow own implementation of segment building
-    public SegmentBuilder(@NonNull DocumentRecycler documentRecycler, @NonNull ViewGroup container) {
+    public SegmentBuilder(@NonNull final OnSavedListener onSavedListener, @NonNull DocumentRecycler documentRecycler, @NonNull ViewGroup container) {
+
         displaySize = documentRecycler.getDisplaySize();
         recyclerView = documentRecycler.getRecyclerView();
         layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
@@ -73,6 +76,14 @@ public class SegmentBuilder {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+        finishButton.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                onSavedListener.onSaved(bookmarksMap);
+                return true;
             }
         });
 
@@ -109,6 +120,7 @@ public class SegmentBuilder {
         // TODO Consider: Space vs Speed? Save bookmarks - utilises less space, but Save segments - faster.
         // TODO Change bookmarks to HashMap / Add a bookmarks, segmentHeight HashMap (if it is to be saved)
         bookmarks = new ArrayList<>();
+        bookmarksMap = new LinkedHashMap<>();
         segments = new ArrayList<>();
     }
 
@@ -122,6 +134,7 @@ public class SegmentBuilder {
 
     }
 
+    // Creates Bitmap of height pageHeight from height bookmark
     private Bitmap calculate(int bookmark, int pageHeight) { // TODO segmentHeight should probably be an argument
         int page = (int) Math.floor(bookmark / pageHeight);
         Log.d("PAGE_POSITION", String.valueOf(page));
@@ -132,11 +145,19 @@ public class SegmentBuilder {
 
         int tempHeight = segmentHeight;
         int y = bookmark - page * pageHeight;
+        // If selected segment exceeds page bounds, set height until bounds
+        // TODO extend beyond bounds and merge
         if (y + tempHeight > pageHeight) tempHeight = pageHeight - y;
+        recyclerView.scrollBy(0, tempHeight);
+        bookmarksMap.put(bookmark, tempHeight);
         return Bitmap.createBitmap(original, 0, bookmark - page * pageHeight, displaySize.x, tempHeight);
     }
 
     private void finish() {
+        Log.d("FINISH", bookmarks.toString());
+        Log.d("FINISH", bookmarksMap.keySet().toString());
+        Log.d("FINISH", bookmarksMap.entrySet().toString());
+        Log.d("FINISH", bookmarksMap.values().toString());
         EditText bpmEdit = segmentBuilder.findViewById(R.id.bpmEdit);
         EditText bpbEdit = segmentBuilder.findViewById(R.id.bpbEdit);
         EditText bplEdit = segmentBuilder.findViewById(R.id.bplEdit);
@@ -154,9 +175,14 @@ public class SegmentBuilder {
         int dps = (int) (60.0f / bpm * bpb * bpl);
         Log.d("DURATION", String.valueOf(dps));
 
+        // Switch adapter and thus view to the "bookmarked" version
         SegmentAdapter segmentAdapter = new SegmentAdapter(segments);
         recyclerView.setAdapter(segmentAdapter);
         segmentBuilder.setVisibility(View.GONE);
+    }
+
+    public interface OnSavedListener {
+        void onSaved(LinkedHashMap<Integer, Integer> bookmarks);
     }
 }
 
