@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.SegmentViewHolder> {
+public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.SegmentViewHolder> {
 
     private ArrayList<Bitmap> segments;
 
-    SegmentAdapter(@NonNull ArrayList<Bitmap> segments) {
+    public SegmentAdapter(@NonNull ArrayList<Bitmap> segments) {
         this.segments = segments;
     }
 

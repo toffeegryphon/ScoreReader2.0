@@ -29,7 +29,7 @@ public class SegmentBuilder {
     private Point displaySize;
 
     private ArrayList<Integer> bookmarks;
-    private LinkedHashMap<Integer, Integer> bookmarksMap;
+    private LinkedHashMap<Double, Double> bookmarksMap;
     private ArrayList<Bitmap> segments;
 
     private RecyclerView recyclerView;
@@ -149,7 +149,8 @@ public class SegmentBuilder {
         // TODO extend beyond bounds and merge
         if (y + tempHeight > pageHeight) tempHeight = pageHeight - y;
         recyclerView.scrollBy(0, tempHeight);
-        bookmarksMap.put(bookmark, tempHeight);
+        // TODO MAJOR should not use absolute height! Different devices will result in different values! Use percentage of page!
+        bookmarksMap.put(bookmark/((double) pageHeight), tempHeight/((double) pageHeight));
         return Bitmap.createBitmap(original, 0, bookmark - page * pageHeight, displaySize.x, tempHeight);
     }
 
@@ -182,7 +183,7 @@ public class SegmentBuilder {
     }
 
     public interface OnSavedListener {
-        void onSaved(LinkedHashMap<Integer, Integer> bookmarks);
+        void onSaved(LinkedHashMap<Double, Double> bookmarks);
     }
 }
 

@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
@@ -21,17 +23,23 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pdflib.DocumentRecycler;
+import com.example.pdflib.SegmentAdapter;
 import com.example.pdflib.SegmentBuilder;
+import com.example.pdflib.Utils;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+
+import static com.example.pdflib.Utils.convert;
+import static com.example.pdflib.Utils.generate;
 
 public class MainActivity extends AppCompatActivity implements SegmentBuilder.OnSavedListener {
 
@@ -57,6 +65,21 @@ public class MainActivity extends AppCompatActivity implements SegmentBuilder.On
                 return pathname.getName().endsWith("txt");
             }
         })));
+        Utils.Config result = convert(getFilesDir().getAbsolutePath() + "/bookmarks.txt");
+        if (result.getSource() != null && result.getBookmarks() != null) {
+            Log.d("CREATE", result.toString());
+            ArrayList<Bitmap> bookmarks = generate(result);
+
+            if (bookmarks != null) {
+                final DocumentRecycler documentRecycler = new DocumentRecycler(
+                        new File(result.getSource()),
+                        (RecyclerView) findViewById(R.id.documentsRecycler),
+                        display);
+
+                SegmentAdapter segmentAdapter = new SegmentAdapter(bookmarks);
+                ((RecyclerView) findViewById(R.id.documentsRecycler)).setAdapter(segmentAdapter);
+            }
+        }
 //        search();
 //        start();
     }
@@ -115,11 +138,11 @@ public class MainActivity extends AppCompatActivity implements SegmentBuilder.On
     }
 
     @Override
-    public void onSaved(LinkedHashMap<Integer, Integer> bookmarks) {
+    public void onSaved(LinkedHashMap<Double, Double> bookmarks) {
         // TODO implement SQL of source file to saved file
         StringBuilder data = new StringBuilder(String.format(Locale.getDefault(), "%s\n", currentFilePath));
-        for (Map.Entry<Integer, Integer> bookmark : bookmarks.entrySet()) {
-            data.append(String.format(Locale.getDefault(), "%d:%d\n", bookmark.getKey(), bookmark.getValue()));
+        for (Map.Entry<Double, Double> bookmark : bookmarks.entrySet()) {
+            data.append(String.format(Locale.getDefault(), "%s:%s\n", bookmark.getKey(), bookmark.getValue()));
         }
         Log.d("DATA", data.toString());
 
@@ -132,6 +155,6 @@ public class MainActivity extends AppCompatActivity implements SegmentBuilder.On
             e.printStackTrace();
         }
         // TODO return to home page
-        // TODO create home page with list of created .txt
+        // TODO convert home page with list of created .txt
     }
 }

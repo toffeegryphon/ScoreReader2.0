@@ -101,6 +101,10 @@ and returns a Bitmap of the bookmarked segment. (TODO: add variable
 1. Added last blank page.
 2. Added file selector (so far only from downloads)
 3. Auto jump after bookmarking.
+4. Saving to a .txt file
+5. Loading config from .txt file 
+6. Create Bitmap Array from Config file
+7. Load Bitmap Array => IT WORKS!
 
 ## To Do
 1. Decide between file saving implementations - a config file vs saving
@@ -110,3 +114,5 @@ and returns a Bitmap of the bookmarked segment. (TODO: add variable
 4. Auto scrolling.
 5. File picker.
 6. Convert to single source of data (Repository)
+7. Undo bookmark
+8. View, edit, then commit
