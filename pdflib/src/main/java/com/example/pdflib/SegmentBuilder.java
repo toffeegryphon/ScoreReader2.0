@@ -177,8 +177,9 @@ public class SegmentBuilder {
         Log.d("DURATION", String.valueOf(dps));
 
         // Switch adapter and thus view to the "bookmarked" version
-        SegmentAdapter segmentAdapter = new SegmentAdapter(segments);
-        recyclerView.setAdapter(segmentAdapter);
+//        SegmentAdapter segmentAdapter = new SegmentAdapter(segments);
+//        recyclerView.setAdapter(segmentAdapter);
+        new SegmentRecycler(recyclerView, segments);
         segmentBuilder.setVisibility(View.GONE);
     }
 

@@ -11,9 +11,9 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.DocumentsContract;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.pdflib.DocumentRecycler;
 import com.example.pdflib.SegmentAdapter;
 import com.example.pdflib.SegmentBuilder;
+import com.example.pdflib.SegmentRecycler;
 import com.example.pdflib.Utils;
 
 import java.io.File;
@@ -45,6 +46,14 @@ public class MainActivity extends AppCompatActivity implements SegmentBuilder.On
 
     private Point display;
     private String currentFilePath;
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        getWindowManager().getDefaultDisplay().getSize(display);
+        Log.d("DISPLAY_WINDOW", display.toString());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements SegmentBuilder.On
         Utils.Config result = convert(getFilesDir().getAbsolutePath() + "/bookmarks.txt");
         if (result.getSource() != null && result.getBookmarks() != null) {
             Log.d("CREATE", result.toString());
-            ArrayList<Bitmap> bookmarks = generate(result);
+            ArrayList<Bitmap> bookmarks = generate(result, display.x);
 
             if (bookmarks != null) {
                 final DocumentRecycler documentRecycler = new DocumentRecycler(
@@ -76,8 +85,20 @@ public class MainActivity extends AppCompatActivity implements SegmentBuilder.On
                         (RecyclerView) findViewById(R.id.documentsRecycler),
                         display);
 
-                SegmentAdapter segmentAdapter = new SegmentAdapter(bookmarks);
-                ((RecyclerView) findViewById(R.id.documentsRecycler)).setAdapter(segmentAdapter);
+//                SegmentAdapter segmentAdapter = new SegmentAdapter(bookmarks);
+//                ((RecyclerView) findViewById(R.id.documentsRecycler)).setAdapter(segmentAdapter);
+                final SegmentRecycler segmentRecycler = new SegmentRecycler(documentRecycler.getRecyclerView(), bookmarks);
+
+                final Handler handler = new Handler();
+                final Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("SCROLL", String.valueOf(System.currentTimeMillis()));
+                        segmentRecycler.scroll();
+                        handler.postDelayed(this, 1000);
+                    }
+                };
+                handler.postDelayed(runnable, 1000);
             }
         }
 //        search();

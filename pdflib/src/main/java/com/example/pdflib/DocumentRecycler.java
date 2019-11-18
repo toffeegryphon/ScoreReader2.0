@@ -47,7 +47,7 @@ public class DocumentRecycler {
         return displaySize;
     }
 
-    RecyclerView getRecyclerView() {
+    public RecyclerView getRecyclerView() {
         return recyclerView;
     }
 }

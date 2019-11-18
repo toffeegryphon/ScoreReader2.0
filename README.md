@@ -77,6 +77,15 @@ and returns a Bitmap of the bookmarked segment. (TODO: add variable
 `segmentHeight`
 > Height of each segment in px.
 
+### SegmentRecycler
+
+#### Methods
+`scroll()`
+> If the last item is not completely visible, will allow scroll. Uses
+> `LayoutManager.scrollToPositionWithOffset` as I found out that
+> `scrollToPosition` will just scroll until the item at `position` is
+> visible, not scroll it to the top. Scroll with offset 0 will do so.
+
 ## ChangeLog
 ### 21/08/2019
 1. Improved `calculate()`
@@ -105,6 +114,10 @@ and returns a Bitmap of the bookmarked segment. (TODO: add variable
 5. Loading config from .txt file 
 6. Create Bitmap Array from Config file
 7. Load Bitmap Array => IT WORKS!
+
+#### 18/11/2019
+1. Proper scaling.
+2. Added primitive scrolling
 
 ## To Do
 1. Decide between file saving implementations - a config file vs saving
